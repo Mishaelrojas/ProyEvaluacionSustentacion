@@ -1,5 +1,5 @@
 {% extends "index.html" %}
-{% block title %} POSGRADO | Ponentes {% endblock title %}
+{% block title %} POSGRADO | Jurados {% endblock title %}
 {% load static %}
 
 
@@ -7,14 +7,14 @@
 <!-- Bread crumb and right sidebar toggle -->
 <div class="row page-titles">
     <div class="col-md-5 align-self-center">
-        <h3 class="text-themecolor"><b>LISTADO DE PONENTES</b></h3>
+        <h3 class="text-themecolor"><b>LISTADO DE JURADOS</b></h3>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
-            <li class="breadcrumb-item active">Lista de ponentes</li>
+            <li class="breadcrumb-item active">Lista de jurados</li>
         </ol>
     </div>   
     <div class="col-md-7 align-self-center mr">
-        <a href="{% url 'crear_ponente' %}" class="btn waves-effect waves-light btn btn-info pull-right text-white"><i
+        <a href="{% url 'crear_jurado' %}" class="btn waves-effect waves-light btn btn-info pull-right text-white"><i
                 class="fa fa-plus-square"></i> NUEVO</a>      
     </div> 
         
@@ -25,19 +25,19 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-striped" id="tablaponentes">
+                    <table class="table table-striped" id="tablajurados">
                         <thead class="table-dark">
                             <tr>
-                                <th>CODIGO</th>
-                                <th>DATOS DEL PONENTE</th>
+                                <th><center>ID</center></th>
+                                <th>DATOS DEL JURADO</th>
                                 <th>DNI</th>
-                                <th>PROGRAMA</th>
-                                <th>UNIDADES</th>   
-                                <th>MENCIÓN</th>                                
-                                <th>ACCIONES</th>
+                                <th>CARGO</th>
+                                <th>EMAIL</th>   
+                                <th>TELEFONO</th>                                
+                                <th><center>ACCIONES</center></th>
                             </tr>
                         </thead>
-                        <tbody id="tablebody_ponentes">
+                        <tbody id="tablebody_jurados">
                         </tbody>         
                     </table>
                 </div>
@@ -84,11 +84,11 @@
     const dataTableOptions = {
         columnDefs: [{
                 orderable: false,
-                targets: [2, 6]
+                targets: [2, 4, 5, 6]
             },
             {
                 searchable: false,
-                targets: [2, 6] 
+                targets: [3, 4, 5, 6] 
             }
         ],
         pageLength: 10,
@@ -115,34 +115,42 @@
             dataTable.destroy();
         }
         await listaPonentes();
-        dataTable = $("#tablaponentes").DataTable(dataTableOptions);
+        dataTable = $("#tablajurados").DataTable(dataTableOptions);
         dataTableIsInitialized = true;
     };
 
     const listaPonentes = async () => {
         try {
-            const response = await fetch("/ponente/listar_ponentes_json");
+            const response = await fetch("/jurado/listar_jurado_json");
             const data = await response.json();
             let content = '';
-            data.ponente.forEach((item_ponente) => {
-                const editUrl = `/ponente/edit/${item_ponente.idAlumno}/`;
+            data.jurado.forEach((item_jurado) => {
+                const editUrl = `/jurado/edit/${item_jurado.idJurado}/`;
+                let color = '';
+                if (item_jurado.cargo === 'Secretario') {
+                    color = '#f8f32b';
+                } else if (item_jurado.cargo === 'Presidente') {
+                    color = '#20aee3';
+                } else{
+                    color = '#48a259';
+                }
                 content += `
                     <tr>                            
-                        <td>${item_ponente.codigo}</td>                    
-                        <td>${item_ponente.nombre_ponente}</td>                                                           
-                        <td>${item_ponente.dni}</td>
-                        <td>${item_ponente.doctorado_maestria}</td>
-                        <td>${item_ponente.unidad}</td>                       
-                        <td>${item_ponente.mencion}</td>                 
+                        <td><center>${item_jurado.idJurado}</center></td>                  
+                        <td>${item_jurado.nombre_jurado}</td>                                                           
+                        <td>${item_jurado.dni}</td>
+                        <td><div style=" display:inline-block; background-color: ${color}; color: #fff; "><b style="padding-left: 6px;padding-right: 6px;">${item_jurado.cargo}</b></div></td>
+                        <td>${item_jurado.email}</td>                       
+                        <td>${item_jurado.telefono}</td>                 
                         <td>
                             <center>                       
                                 <a href="${editUrl}" class="btn btn-sm btn-success" style=" color: white;"><i class='fa fa-edit'></i></a>
-                                <button onclick="eliminarPonente(${item_ponente.idAlumno})" class='btn btn-sm btn-danger'><i class='fa-solid fa-trash-can'></i></button>                           
+                                <button onclick="eliminarJurado(${item_jurado.idJurado})" class='btn btn-sm btn-danger'><i class='fa-solid fa-trash-can'></i></button>                           
                             </center>
                         </td>
                     </tr>`;
             });
-            document.getElementById('tablebody_ponentes').innerHTML = content;
+            document.getElementById('tablebody_jurados').innerHTML = content;
         } catch (ex) {
             console.error('Error al listar los ponentes:', ex);
         }
@@ -156,10 +164,10 @@
 
     <!-- Eliminar un usuario -->
     <script>
-        function eliminarPonente(id){
+        function eliminarJurado(id){
             Swal.fire({
                 title: "¿Realmente deseas eliminar este registro?",
-                text: "ID del Ponente: " + id,
+                text: "ID del Jurado: " + id,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
@@ -168,7 +176,7 @@
                 cancelButtonText: 'No, cancelar',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = `/ponente/delete/${id}/`;
+                    window.location.href = `/jurado/delete/${id}/`;
                 }
             });
         }

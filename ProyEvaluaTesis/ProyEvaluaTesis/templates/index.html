@@ -49,6 +49,17 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     {% endblock %}
 
+    <style>
+        .u-pro {
+    position: relative; /* Asegura que el menú desplegable se posicione correctamente */
+    /* Otros estilos */
+}
+        .dropdown-menu {
+        position: absolute;
+        z-index: 199000; /* Valor alto para asegurar que esté por encima de otros elementos */
+        /* Otros estilos */
+}
+    </style>
 
 </head>
 
@@ -119,9 +130,8 @@
                                     style="text-transform: uppercase; display: inline-block; width: 120px;"><b>{{ request.user.username }}</b>&nbsp;</span>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href=""><i class="fa-solid fa-address-card fa-lg"
-                                            style="color: #577ab7;"></i>&nbsp; Perfil de Usuario</a></li>
-                                <hr>
+                                <!-- <li><a class="dropdown-item" href=""><i class="fa-solid fa-address-card fa-lg"
+                                            style="color: #577ab7;"></i>&nbsp; Perfil de Usuario</a></li> -->
                                 <li><a class="dropdown-item" href="{% url 'logout' %}"><i
                                             class="fa-solid fa-right-from-bracket fa-lg"
                                             style="color: #577ab7;"></i>&nbsp; Salir</a></li>
@@ -143,14 +153,14 @@
                 <!-- Sidebar navigation-->
                 <nav class="sidebar-nav">
                     <ul id="sidebarnav">
-                        <li> <a class="waves-effect waves-dark" href="" aria-expanded="false"><i
+                        <li> <a class="waves-effect waves-dark" href="{% url 'listar_usuarios' %}" aria-expanded="false"><i
                                     class="fa-solid fa-users"></i></i><span class="hide-menu">Usuarios</span></a>
                         </li>
                         <li> <a class="waves-effect waves-dark" href="{% url 'listar_ponentes' %}"
                                 aria-expanded="false"><i class="fa-solid fa-graduation-cap"></i><span
                                     class="hide-menu">Ponentes</span></a>
                         </li>
-                        <li> <a class="waves-effect waves-dark" href="" aria-expanded="false"><i
+                        <li> <a class="waves-effect waves-dark" href="{% url 'listar_jurados' %}" aria-expanded="false"><i
                                     class="fa-brands fa-black-tie"></i><span class="hide-menu">Jurados</span></a>
                         </li>
                         <li> <a class="waves-effect waves-dark" href="{% url 'listar_evaluaciones' %}"
@@ -162,8 +172,8 @@
                         </li>
                     </ul>
                     <div class="text-center mt-4">
-                        <a href="" class="btn waves-effect waves-light btn-info hidden-md-down text-white"><i
-                                class="fa fa-sign-out"></i> Salir</a>
+                        <a style="width: 100%;" href="{% url 'logout' %}" class="btn waves-effect waves-light btn-info text-white"><i
+                                class="fa fa-sign-out" ></i> Salir</a>
                     </div>
                 </nav>
                 <!-- End Sidebar navigation -->

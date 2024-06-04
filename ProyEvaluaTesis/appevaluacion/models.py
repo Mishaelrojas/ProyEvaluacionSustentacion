@@ -35,9 +35,11 @@ CARGO = (('Presidente','Presidente'),
 class Jurado(models.Model):
     idJurado = models.AutoField(primary_key=True, null=False)   
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    nombre_jurado = models.CharField(max_length=200, null=False)   
+    nombre_jurado = models.CharField(max_length=200, null=False)  
+    dni  = models.CharField(max_length=20, null=True, unique=True)
     cargo = models.CharField(max_length=20, choices=CARGO)
     email = models.EmailField(max_length=100, blank=True, null=True)
+    telefono = models.CharField(max_length=10, null=True)
     fecha_creacion = models.DateTimeField(auto_now=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
     eliminado = models.BooleanField(default=False)
@@ -49,8 +51,8 @@ class Jurado(models.Model):
     
 class Evaluacion(models.Model):
     idEvaluacion = models.AutoField(primary_key=True, null = False)
-    codigo = models.CharField(max_length=10, null=True)
-    alumno = models.ForeignKey(Alumno, on_delete = models.CASCADE, null = False)       
+    codigo = models.CharField(max_length=10, null=False, unique=True )
+    alumno = models.ForeignKey(Alumno, on_delete = models.CASCADE, null = False, unique=True)       
     fecha_creacion = models.DateTimeField(auto_now=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
     eliminado = models.BooleanField(default=False)
